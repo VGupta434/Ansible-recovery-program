@@ -1,0 +1,25 @@
+- name: Install Nginx on App Servers
+  become: yes
+  hosts: app_servers
+  tasks:
+  - name: Install nginx
+    dnf:
+      name: nginx
+      state: present
+  - name: Start nginx service
+    service:
+      name: nginx
+      state: started
+      enabled: yes
+  - name: Allow HTTP in firewall
+    firewalld:
+      service: http
+      permanent: yes
+      state: enabled
+      immediate: yes
+  - name: Allow HTTPS in firewall
+    firewalld:
+      service: https
+      permanent: yes
+      state: enabled
+      immediate: yes

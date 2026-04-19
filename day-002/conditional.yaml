@@ -1,0 +1,10 @@
+# this playbook will install git on non RedHat machines and non windows machines
+- name: install git on non Redhat machines
+  hosts: app_servers
+  become: yes
+  tasks:
+  - name: Install git on non RedHat machines and non windows machines
+    dnf:
+      name: git
+      state: present
+    when: ansible_os_family != "RedHat" and ansible_os_family != "Windows"

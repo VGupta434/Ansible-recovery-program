@@ -1,0 +1,10 @@
+- name: Install packages dynamically on appservers
+  become: yes
+  hosts: app_servers
+  vars:
+    package_name: nginx
+  tasks:
+    - name: install package
+      dnf:
+        name: "{{ package_name }}"
+        state: present

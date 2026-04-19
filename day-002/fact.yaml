@@ -1,0 +1,7 @@
+- name: use facts
+  become: yes
+  hosts: app_servers
+  tasks:
+  - name: Print fact
+    debug:
+      msg: "The OS is {{ ansible_os_family }}"

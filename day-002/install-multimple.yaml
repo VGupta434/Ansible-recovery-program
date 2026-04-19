@@ -1,0 +1,34 @@
+# this playbook installs multiple packages on the servers
+- name: Install multiple packages on appservers
+  hosts: app_servers
+  become: yes
+  vars:
+    packages:
+    - nginx
+    - git
+    - curl
+    firewall_services:
+    - http
+    - https
+  tasks:
+  - name: print system info
+    debug:
+      msg : "Running playbook on {{ ansible_hostname }} with IP {{ ansible_default_ipv4.address }}"
+  - name: install packages
+    dnf:
+      name: "{{ item }}"
+      state: present
+    loop: "{{ packages }}"
+    when: ansible_os_family == "RedHat"
+  - name: Start nginx service
+    service:
+      name: nginx
+      state: started
+      enabled: yes
+  - name: Allow HTTP & HTTPS in firewall
+    firewalld:
+      service: "{{ item }}"
+      permanent: yes
+      state: enabled
+      immediate: yes
+    loop: "{{ firewall_services }}"

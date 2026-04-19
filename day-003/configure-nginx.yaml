@@ -1,0 +1,41 @@
+- name: configure nginx on the app_servers
+  hosts: app_servers
+  become: yes
+  vars:
+    nginx_port: 8080
+    server_name: "_"
+  tasks:
+    - name: Ensure nginx is installed
+      dnf:
+        name: nginx
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: deploy nginx config file
+      template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/conf.d/custom.conf
+      notify:
+        - validate nginx
+        - restart nginx
+
+    - name: allow nginx port in firewall
+      firewalld:
+        port: "{{ nginx_port }}/tcp"
+        permanent: yes
+        state: enabled
+        immediate: yes
+
+    - name: Ensure nginx is running
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: validate nginx
+      command: nginx -t
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
