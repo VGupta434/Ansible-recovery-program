@@ -1,0 +1,25 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/nginx
+- name: ensure nginx is installed
+  dnf:
+    name: nginx
+    state: present
+- name: deploy nginx config file
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/conf.d/custom.conf
+  notify:
+    - restart nginx
+- name: allow nginx port in firewall
+  firewalld:
+    port: "{{ nginx_port }}/tcp"
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: ensure nginx is running and enabled
+  service:
+    name: nginx
+    state: started
+    enabled: true
