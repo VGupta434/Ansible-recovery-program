@@ -106,6 +106,28 @@ notify: restart nginx
 
 If the nginx configuration is invalid, the service will fail to restart and may go down. This can cause application downtime. That’s why it’s important to validate the configuration before restarting the service.
 
-### 4: Why validate config before restart?
+### Q4: Why validate config before restart?
 
 Validating the configuration using commands like ```nginx -t``` ensures there are no syntax errors before applying changes. This prevents service failure and ensures safe deployments in production.
+
+## day-004
+
+### Q1: What is a role in Ansible?
+
+A role is a structured way of organizing Ansible content such as tasks, handlers, variables, templates, and files into a reusable and modular unit. It helps in managing complex automation by separating concerns and improving maintainability.
+
+### Q2: Difference between vars and defaults?
+
+The main difference is priority:
+
+```defaults``` → lowest priority, can be easily overridden
+
+```vars``` → higher priority, harder to override
+
+### Q3: Why use roles instead of playbooks?
+
+Roles help in structuring Ansible code in a modular and reusable way. Instead of writing everything in a single playbook, roles allow separation of concerns, making the code easier to maintain, reuse, and scale in large projects.
+
+### Q4: Where do you store templates in a role?
+
+Templates are stored in the templates/ directory inside the role, and they are typically Jinja2 (.j2) files used with the template module.
